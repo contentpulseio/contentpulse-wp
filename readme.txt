@@ -29,7 +29,7 @@ Features:
 1. Upload the `contentpulse-wp` folder to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Settings > ContentPulse
-4. Enter your ContentPulse API URL and API Key
+4. Enter one Settings API Key
 5. Content will now sync automatically when published in ContentPulse
 
 == Frequently Asked Questions ==

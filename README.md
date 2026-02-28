@@ -26,9 +26,13 @@ composer require contentpulse/wordpress-plugin
 ## Configuration
 
 1. Go to **Settings > ContentPulse** in WordPress admin
-2. Enter an **Inbound Shared Key** (used to validate incoming publish requests)
+2. Enter one **Settings API Key**
 3. Save the settings
-4. Use **Test Connection** and **Send Sample Content** for a quick smoke test
+4. Use **Test Connection** to verify connectivity
+
+The plugin resolves ContentPulse API URL automatically from `CONTENTPULSE_API_URL`
+(wp-config/environment). If not set, it falls back to `http://host.docker.internal:8080`
+for local Docker development.
 
 ## Features
 
