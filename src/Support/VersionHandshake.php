@@ -20,14 +20,14 @@ class VersionHandshake
      */
     public function check(): array
     {
-        $apiUrl = get_option('contentpulse_api_url', '');
+        $apiUrl = $this->resolveContentPulseApiBaseUrl();
         $apiKey = get_option('contentpulse_api_key', '');
 
         if (empty($apiUrl) || empty($apiKey)) {
             return [
                 'compatible' => false,
                 'plugin_version' => CONTENTPULSE_WP_VERSION,
-                'message' => 'API URL and API Key must be configured.',
+                'message' => 'Settings API key must be configured.',
             ];
         }
 
@@ -61,5 +61,32 @@ class VersionHandshake
     public function getMinApiVersion(): string
     {
         return self::MIN_API_VERSION;
+    }
+
+    private function resolveContentPulseApiBaseUrl(): string
+    {
+        $configured = '';
+
+        if (defined('CONTENTPULSE_API_URL')) {
+            $constantUrl = constant('CONTENTPULSE_API_URL');
+            if (is_string($constantUrl)) {
+                $configured = $constantUrl;
+            }
+        } elseif (is_string(getenv('CONTENTPULSE_API_URL'))) {
+            $configured = (string) getenv('CONTENTPULSE_API_URL');
+        }
+
+        if (trim($configured) === '') {
+            $configured = 'http://host.docker.internal:8080';
+        }
+
+        $filtered = apply_filters('contentpulse_api_base_url', $configured);
+        $normalized = rtrim(trim((string) $filtered), '/');
+
+        if (str_ends_with($normalized, '/api/v1')) {
+            return mb_substr($normalized, 0, -7);
+        }
+
+        return $normalized;
     }
 }
