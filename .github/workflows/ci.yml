@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone PHP SDK
+        run: git clone https://github.com/contentpulseio/contentpulse-php-sdk.git ../contentpulse-php-sdk
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPUnit
+        run: ./vendor/bin/phpunit
+
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clone PHP SDK
+        run: git clone https://github.com/contentpulseio/contentpulse-php-sdk.git ../contentpulse-php-sdk
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run Laravel Pint
+        run: ./vendor/bin/pint --test
