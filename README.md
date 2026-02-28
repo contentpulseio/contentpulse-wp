@@ -26,18 +26,20 @@ composer require contentpulse/wordpress-plugin
 ## Configuration
 
 1. Go to **Settings > ContentPulse** in WordPress admin
-2. Enter your ContentPulse API URL and API Key
+2. Enter an **Inbound Shared Key** (used to validate incoming publish requests)
 3. Save the settings
+4. Use **Test Connection** and **Send Sample Content** for a quick smoke test
 
 ## Features
 
 - Automatic post creation and updates
+- Thin ingestion connector (main ContentPulse application controls payload and publishing logic)
 - Featured image sideloading
 - SEO meta integration (Yoast SEO, Rank Math)
 - Category and tag auto-assignment
 - Scheduled content support
 - Block editor compatibility
-- Version handshake for API compatibility
+- Recent sync history in plugin admin
 
 ## REST API Endpoints
 
