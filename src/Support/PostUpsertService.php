@@ -30,14 +30,15 @@ class PostUpsertService
             'post_content' => wp_kses_post($payload['body_html'] ?? ''),
             'post_excerpt' => sanitize_textarea_field($payload['excerpt'] ?? ''),
             'post_name' => sanitize_title($payload['slug'] ?? ''),
-            'post_status' => $this->resolvePostStatus($payload['status'] ?? 'draft'),
+            'post_status' => $this->resolvePostStatus($payload),
+            'post_author' => $this->resolvePostAuthorId($payload),
             'post_type' => 'post',
         ];
 
         if (! empty($payload['scheduled_at']) && $postData['post_status'] === 'future') {
             $postData['post_date'] = $payload['scheduled_at'];
             $postData['post_date_gmt'] = get_gmt_from_date($payload['scheduled_at']);
-        } elseif (! empty($payload['published_at'])) {
+        } elseif (! empty($payload['published_at']) && $postData['post_status'] === 'publish') {
             $postData['post_date'] = $payload['published_at'];
             $postData['post_date_gmt'] = get_gmt_from_date($payload['published_at']);
         }
@@ -67,7 +68,7 @@ class PostUpsertService
 
         $this->applySeoMeta($postId, $payload['seo'] ?? []);
         $this->applyTaxonomies($postId, $payload);
-        $this->updateSyncTracking();
+        $this->updateSyncTracking($action, $postId, $payload);
 
         return [
             'action' => $action,
@@ -97,16 +98,15 @@ class PostUpsertService
         return $postId ? (int) $postId : null;
     }
 
-    private function resolvePostStatus(string $status): string
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function resolvePostStatus(array $payload): string
     {
-        return match ($status) {
-            'published' => 'publish',
-            'scheduled' => 'future',
-            'draft' => 'draft',
-            'review' => 'pending',
-            'archived' => 'private',
-            default => 'draft',
-        };
+        $requested = sanitize_key((string) ($payload['post_status'] ?? 'draft'));
+        $allowed = ['publish', 'future', 'draft', 'pending', 'private'];
+
+        return in_array($requested, $allowed, true) ? $requested : 'draft';
     }
 
     /**
@@ -126,6 +126,8 @@ class PostUpsertService
             'meta_keywords' => '_contentpulse_meta_keywords',
             'og_title' => '_contentpulse_og_title',
             'og_description' => '_contentpulse_og_description',
+            'twitter_title' => '_contentpulse_twitter_title',
+            'twitter_description' => '_contentpulse_twitter_description',
             'meta_robots' => '_contentpulse_meta_robots',
         ];
 
@@ -155,6 +157,31 @@ class PostUpsertService
                 update_post_meta($postId, 'rank_math_description', sanitize_text_field($seo['meta_description']));
             }
         }
+    }
+
+    /**
+     * Resolve a valid author ID to avoid empty bylines (author=0).
+     *
+     * @param  array<string, mixed>  $payload
+     */
+    private function resolvePostAuthorId(array $payload): int
+    {
+        $requestedAuthor = isset($payload['post_author']) ? (int) $payload['post_author'] : 0;
+        if ($requestedAuthor > 0 && get_user_by('id', $requestedAuthor) instanceof \WP_User) {
+            return $requestedAuthor;
+        }
+
+        $admins = get_users([
+            'role' => 'administrator',
+            'number' => 1,
+            'fields' => 'ids',
+        ]);
+
+        if (is_array($admins) && isset($admins[0])) {
+            return (int) $admins[0];
+        }
+
+        return 1;
     }
 
     /**
@@ -190,10 +217,24 @@ class PostUpsertService
         }
     }
 
-    private function updateSyncTracking(): void
+    /**
+     * @param  array<string, mixed>  $payload
+     */
+    private function updateSyncTracking(string $action, int $postId, array $payload): void
     {
         update_option('contentpulse_last_sync', current_time('mysql'));
         $count = (int) get_option('contentpulse_sync_count', 0);
         update_option('contentpulse_sync_count', $count + 1);
+
+        $history = new SyncHistoryService;
+        $history->record([
+            'action' => $action,
+            'post_id' => $postId,
+            'url' => get_permalink($postId) ?: '',
+            'title' => (string) ($payload['title'] ?? ''),
+            'status' => (string) ($payload['post_status'] ?? 'draft'),
+            'contentpulse_id' => isset($payload['contentpulse_id']) ? (string) $payload['contentpulse_id'] : null,
+            'synced_at' => current_time('mysql'),
+        ]);
     }
 }
