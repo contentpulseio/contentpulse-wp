@@ -30,9 +30,12 @@ composer require contentpulse/wordpress-plugin
 3. Save the settings
 4. Use **Test Connection** to verify connectivity
 
-The plugin resolves ContentPulse API URL automatically from `CONTENTPULSE_API_URL`
-(wp-config/environment). If not set, it falls back to `http://host.docker.internal:8080`
-for local Docker development.
+The SDK resolves ContentPulse endpoints with built-in defaults:
+- API base: `https://api.contentpulse.io`
+- App base: `https://app.contentpulse.io`
+
+Optional overrides are available through `CONTENTPULSE_API_URL` and
+`CONTENTPULSE_APP_URL` (or the `contentpulse_api_base_url` / `contentpulse_app_base_url` filters).
 
 ## Features
 

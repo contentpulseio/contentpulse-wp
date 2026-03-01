@@ -8,6 +8,7 @@ use ContentPulse\Core\DTO\ContentFilters;
 use ContentPulse\Core\DTO\ContentItem;
 use ContentPulse\Http\ContentPulseClient;
 use ContentPulse\WordPress\Api\Routes;
+use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
 use ContentPulse\WordPress\Support\SyncHistoryService;
 
 final class Plugin
@@ -33,6 +34,7 @@ final class Plugin
         add_action('wp_head', [$this, 'renderContentPulseMetaTags'], 5);
         add_action('wp_head', [$this, 'renderContentPulseFeaturedImageStyleFix'], 6);
         add_action('admin_post_contentpulse_test_connection', [$this, 'handleTestConnection']);
+        add_action('admin_post_contentpulse_test_api_key', [$this, 'handleTestApiKey']);
         add_action('admin_post_contentpulse_publish_ready', [$this, 'handlePublishReadyContent']);
     }
 
@@ -200,6 +202,11 @@ final class Plugin
                     <?php wp_nonce_field('contentpulse_test_connection'); ?>
                     <?php submit_button(__('Test Connection', 'contentpulse-wp'), 'secondary', 'submit', false); ?>
                 </form>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <input type="hidden" name="action" value="contentpulse_test_api_key">
+                    <?php wp_nonce_field('contentpulse_test_api_key'); ?>
+                    <?php submit_button(__('Test API Key (ContentPulse)', 'contentpulse-wp'), 'secondary', 'submit', false); ?>
+                </form>
             </div>
 
             <h2><?php echo esc_html__('3) Publish ready ContentPulse content', 'contentpulse-wp'); ?></h2>
@@ -222,25 +229,36 @@ final class Plugin
                         <th><?php echo esc_html__('Title', 'contentpulse-wp'); ?></th>
                         <th><?php echo esc_html__('Status', 'contentpulse-wp'); ?></th>
                         <th><?php echo esc_html__('Updated', 'contentpulse-wp'); ?></th>
-                        <th><?php echo esc_html__('Action', 'contentpulse-wp'); ?></th>
+                        <th><?php echo esc_html__('Actions', 'contentpulse-wp'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
                     <?php foreach ($readyContents as $readyContent) { ?>
+                        <?php
+                            $contentId = (int) ($readyContent['id'] ?? 0);
+                        $contentPulseViewUrl = $this->buildContentPulseContentUrl($contentId);
+                        ?>
                         <tr>
                             <td><?php echo esc_html((string) ($readyContent['id'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($readyContent['title'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($readyContent['status'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($readyContent['updated_at'] ?? '')); ?></td>
                             <td>
-                                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                                    <input type="hidden" name="action" value="contentpulse_publish_ready">
-                                    <input type="hidden" name="contentpulse_content_id" value="<?php echo esc_attr((string) ($readyContent['id'] ?? '')); ?>">
-                                    <?php wp_nonce_field('contentpulse_publish_ready'); ?>
-                                    <button type="submit" class="button button-secondary">
-                                        <?php echo esc_html__('Publish to WordPress', 'contentpulse-wp'); ?>
-                                    </button>
-                                </form>
+                                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                                        <input type="hidden" name="action" value="contentpulse_publish_ready">
+                                        <input type="hidden" name="contentpulse_content_id" value="<?php echo esc_attr((string) ($readyContent['id'] ?? '')); ?>">
+                                        <?php wp_nonce_field('contentpulse_publish_ready'); ?>
+                                        <button type="submit" class="button button-secondary">
+                                            <?php echo esc_html__('Publish to WordPress', 'contentpulse-wp'); ?>
+                                        </button>
+                                    </form>
+                                    <?php if ($contentPulseViewUrl !== '') { ?>
+                                        <a href="<?php echo esc_url($contentPulseViewUrl); ?>" class="button" target="_blank" rel="noreferrer">
+                                            <?php echo esc_html__('View in ContentPulse', 'contentpulse-wp'); ?>
+                                        </a>
+                                    <?php } ?>
+                                </div>
                             </td>
                         </tr>
                     <?php } ?>
@@ -334,6 +352,38 @@ final class Plugin
         ));
     }
 
+    public function handleTestApiKey(): void
+    {
+        if (! current_user_can('manage_options')) {
+            wp_die(esc_html__('Unauthorized request.', 'contentpulse-wp'));
+        }
+        check_admin_referer('contentpulse_test_api_key');
+
+        $apiKey = trim((string) get_option('contentpulse_api_key', ''));
+        if ($apiKey === '') {
+            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-wp'));
+        }
+
+        $baseUrl = $this->resolveContentPulseApiBaseUrl();
+
+        try {
+            $client = new ContentPulseClient($baseUrl, $apiKey);
+            $feed = $client->getContentFeed(new ContentFilters(
+                page: 1,
+                perPage: 1,
+            ));
+            $itemCount = count($feed->items);
+
+            $this->redirectWithNotice('success', sprintf(
+                /* translators: %d: number of items returned from first page */
+                __('API key test successful. Connected to ContentPulse and fetched %d item(s) from page 1.', 'contentpulse-wp'),
+                $itemCount
+            ));
+        } catch (\Throwable $exception) {
+            $this->redirectWithNotice('error', __('API key test failed: ', 'contentpulse-wp').$exception->getMessage());
+        }
+    }
+
     public function handlePublishReadyContent(): void
     {
         if (! current_user_can('manage_options')) {
@@ -350,11 +400,10 @@ final class Plugin
 
         $sourceApiUrl = $this->resolveContentPulseApiBaseUrl();
         $sourceApiKey = trim((string) get_option('contentpulse_api_key', ''));
-        if ($sourceApiUrl === '' || $sourceApiKey === '') {
+        if ($sourceApiKey === '') {
             $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-wp'));
         }
-
-        $endpoint = rtrim($sourceApiUrl, '/')."/api/v1/content/{$contentId}/publish-wordpress";
+        $endpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint($sourceApiUrl, $contentId);
         $response = wp_remote_post($endpoint, [
             'timeout' => 25,
             'redirection' => 3,
@@ -399,40 +448,12 @@ final class Plugin
         $this->redirectWithNotice('success', $message);
     }
 
-    private function normalizeContentPulseApiUrl(string $url): string
-    {
-        $normalized = rtrim(trim($url), '/');
-        if ($normalized === '') {
-            return '';
-        }
-
-        if (str_ends_with($normalized, '/api/v1')) {
-            return mb_substr($normalized, 0, -7);
-        }
-
-        return $normalized;
-    }
-
     private function resolveContentPulseApiBaseUrl(): string
     {
-        $configured = '';
+        $resolved = ContentPulseEndpointResolver::resolveApiBaseUrlFromEnvironment();
+        $filtered = (string) apply_filters('contentpulse_api_base_url', $resolved);
 
-        if (defined('CONTENTPULSE_API_URL')) {
-            $constantUrl = constant('CONTENTPULSE_API_URL');
-            if (is_string($constantUrl)) {
-                $configured = $constantUrl;
-            }
-        } elseif (is_string(getenv('CONTENTPULSE_API_URL'))) {
-            $configured = (string) getenv('CONTENTPULSE_API_URL');
-        }
-
-        if (trim($configured) === '') {
-            $configured = 'http://host.docker.internal:8080';
-        }
-
-        $filtered = apply_filters('contentpulse_api_base_url', $configured);
-
-        return $this->normalizeContentPulseApiUrl((string) $filtered);
+        return ContentPulseEndpointResolver::resolveApiBaseUrl($filtered);
     }
 
     /**
@@ -441,51 +462,49 @@ final class Plugin
     private function fetchReadyContents(string $apiKey): array
     {
         $baseUrl = $this->resolveContentPulseApiBaseUrl();
-        if ($baseUrl === '') {
-            return [[], __('ContentPulse API URL could not be resolved.', 'contentpulse-wp')];
-        }
 
         try {
             $client = new ContentPulseClient($baseUrl, $apiKey);
             $items = [];
-            $currentPage = 1;
-            $maxPages = 100;
+            $feed = $client->getContentFeed(new ContentFilters(
+                page: 1,
+                perPage: 50,
+            ));
 
-            do {
-                $feed = $client->getContentFeed(new ContentFilters(
-                    page: $currentPage,
-                    perPage: 50,
-                ));
-
-                foreach ($feed->items as $item) {
-                    if (! $item instanceof ContentItem) {
-                        continue;
-                    }
-
-                    $status = (string) ($item->status ?? '');
-                    if (! in_array($status, ['draft', 'review', 'published', 'scheduled'], true)) {
-                        continue;
-                    }
-
-                    $items[] = [
-                        'id' => $item->id,
-                        'title' => $item->title !== '' ? $item->title : $item->slug,
-                        'status' => $status !== '' ? $status : 'unknown',
-                        'updated_at' => $item->updatedAt?->format('Y-m-d H:i') ?? '',
-                    ];
+            foreach ($feed->items as $item) {
+                if (! $item instanceof ContentItem) {
+                    continue;
                 }
 
-                $currentPage++;
-            } while ($feed->hasMorePages() && $currentPage <= $maxPages);
+                $status = (string) ($item->status ?? '');
+                if (! in_array($status, ['draft', 'review', 'published', 'scheduled'], true)) {
+                    continue;
+                }
 
-            usort($items, static function (array $a, array $b): int {
-                return strcmp((string) ($b['updated_at'] ?? ''), (string) ($a['updated_at'] ?? ''));
-            });
+                $items[] = [
+                    'id' => $item->id,
+                    'title' => $item->title !== '' ? $item->title : $item->slug,
+                    'status' => $status !== '' ? $status : 'unknown',
+                    'updated_at' => $item->updatedAt?->format('Y-m-d H:i') ?? '',
+                ];
+            }
 
             return [$items, ''];
         } catch (\Throwable $exception) {
             return [[], __('Failed to load ready contents: ', 'contentpulse-wp').$exception->getMessage()];
         }
+    }
+
+    private function buildContentPulseContentUrl(int $contentId): string
+    {
+        if ($contentId <= 0) {
+            return '';
+        }
+
+        $resolved = ContentPulseEndpointResolver::resolveAppBaseUrlFromEnvironment();
+        $filtered = (string) apply_filters('contentpulse_app_base_url', $resolved);
+
+        return ContentPulseEndpointResolver::buildContentUrl($filtered, $contentId);
     }
 
     /**
