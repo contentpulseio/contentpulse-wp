@@ -1,5 +1,7 @@
 <?php
 
+use ContentPulse\WordPress\Plugin;
+
 /**
  * Plugin Name: ContentPulse
  * Plugin URI: https://contentpulse.io
@@ -30,14 +32,14 @@ if (file_exists(__DIR__.'/vendor/autoload.php')) {
  * Boot the plugin after all plugins are loaded.
  */
 add_action('plugins_loaded', function () {
-    $plugin = \ContentPulse\WordPress\Plugin::getInstance();
+    $plugin = Plugin::getInstance();
     $plugin->boot();
 });
 
 register_activation_hook(__FILE__, function () {
-    \ContentPulse\WordPress\Plugin::activate();
+    Plugin::activate();
 });
 
 register_deactivation_hook(__FILE__, function () {
-    \ContentPulse\WordPress\Plugin::deactivate();
+    Plugin::deactivate();
 });

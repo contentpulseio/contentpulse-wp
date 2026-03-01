@@ -26,6 +26,17 @@ final class Plugin
         return self::$instance;
     }
 
+    public static function activate(): void
+    {
+        update_option('contentpulse_wp_version', CONTENTPULSE_WP_VERSION);
+        flush_rewrite_rules();
+    }
+
+    public static function deactivate(): void
+    {
+        flush_rewrite_rules();
+    }
+
     public function boot(): void
     {
         add_action('rest_api_init', [$this, 'registerRoutes']);
@@ -537,16 +548,5 @@ final class Plugin
 
         wp_safe_redirect($redirectUrl);
         exit;
-    }
-
-    public static function activate(): void
-    {
-        update_option('contentpulse_wp_version', CONTENTPULSE_WP_VERSION);
-        flush_rewrite_rules();
-    }
-
-    public static function deactivate(): void
-    {
-        flush_rewrite_rules();
     }
 }

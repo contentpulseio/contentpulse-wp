@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace ContentPulse\WordPress\Support;
 
+use ContentPulse\Core\Exceptions\AuthenticationException;
 use ContentPulse\Http\ContentPulseClient;
+use Throwable;
 
 /**
  * Handles version compatibility checks between the plugin and ContentPulse API.
@@ -40,13 +42,13 @@ class VersionHandshake
                 'plugin_version' => CONTENTPULSE_WP_VERSION,
                 'message' => 'Connection successful.',
             ];
-        } catch (\ContentPulse\Core\Exceptions\AuthenticationException $e) {
+        } catch (AuthenticationException $e) {
             return [
                 'compatible' => false,
                 'plugin_version' => CONTENTPULSE_WP_VERSION,
                 'message' => 'Authentication failed — check your API key.',
             ];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return [
                 'compatible' => false,
                 'plugin_version' => CONTENTPULSE_WP_VERSION,

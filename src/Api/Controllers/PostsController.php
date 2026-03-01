@@ -56,29 +56,6 @@ class PostsController
     }
 
     /**
-     * @param  array<string, mixed>  $payload
-     * @return array<string, mixed>
-     */
-    private function normalizePayload(array $payload): array
-    {
-        return [
-            'contentpulse_id' => isset($payload['contentpulse_id']) ? (int) $payload['contentpulse_id'] : null,
-            'title' => trim((string) ($payload['title'] ?? '')),
-            'body_html' => trim((string) ($payload['body_html'] ?? ($payload['content'] ?? ''))),
-            'excerpt' => trim((string) ($payload['excerpt'] ?? '')),
-            'slug' => trim((string) ($payload['slug'] ?? '')),
-            // Main application decides the exact WP post status; plugin only validates it.
-            'post_status' => trim((string) ($payload['post_status'] ?? 'draft')),
-            'featured_image' => isset($payload['featured_image']) ? trim((string) $payload['featured_image']) : null,
-            'categories' => isset($payload['categories']) && is_array($payload['categories']) ? array_values($payload['categories']) : [],
-            'tags' => isset($payload['tags']) && is_array($payload['tags']) ? array_values($payload['tags']) : [],
-            'seo' => isset($payload['seo']) && is_array($payload['seo']) ? $payload['seo'] : [],
-            'published_at' => isset($payload['published_at']) ? trim((string) $payload['published_at']) : null,
-            'scheduled_at' => isset($payload['scheduled_at']) ? trim((string) $payload['scheduled_at']) : null,
-        ];
-    }
-
-    /**
      * Retrieve a single post by its WordPress ID.
      */
     public function show(WP_REST_Request $request): WP_REST_Response|WP_Error
@@ -135,5 +112,28 @@ class PostsController
         }
 
         return new WP_REST_Response(['deleted' => true, 'id' => $postId], 200);
+    }
+
+    /**
+     * @param  array<string, mixed>  $payload
+     * @return array<string, mixed>
+     */
+    private function normalizePayload(array $payload): array
+    {
+        return [
+            'contentpulse_id' => isset($payload['contentpulse_id']) ? (int) $payload['contentpulse_id'] : null,
+            'title' => trim((string) ($payload['title'] ?? '')),
+            'body_html' => trim((string) ($payload['body_html'] ?? ($payload['content'] ?? ''))),
+            'excerpt' => trim((string) ($payload['excerpt'] ?? '')),
+            'slug' => trim((string) ($payload['slug'] ?? '')),
+            // Main application decides the exact WP post status; plugin only validates it.
+            'post_status' => trim((string) ($payload['post_status'] ?? 'draft')),
+            'featured_image' => isset($payload['featured_image']) ? trim((string) $payload['featured_image']) : null,
+            'categories' => isset($payload['categories']) && is_array($payload['categories']) ? array_values($payload['categories']) : [],
+            'tags' => isset($payload['tags']) && is_array($payload['tags']) ? array_values($payload['tags']) : [],
+            'seo' => isset($payload['seo']) && is_array($payload['seo']) ? $payload['seo'] : [],
+            'published_at' => isset($payload['published_at']) ? trim((string) $payload['published_at']) : null,
+            'scheduled_at' => isset($payload['scheduled_at']) ? trim((string) $payload['scheduled_at']) : null,
+        ];
     }
 }

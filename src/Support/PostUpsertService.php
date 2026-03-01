@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ContentPulse\WordPress\Support;
 
 use WP_Error;
+use WP_User;
 
 /**
  * Creates or updates WordPress posts from ContentPulse payloads.
@@ -167,7 +168,7 @@ class PostUpsertService
     private function resolvePostAuthorId(array $payload): int
     {
         $requestedAuthor = isset($payload['post_author']) ? (int) $payload['post_author'] : 0;
-        if ($requestedAuthor > 0 && get_user_by('id', $requestedAuthor) instanceof \WP_User) {
+        if ($requestedAuthor > 0 && get_user_by('id', $requestedAuthor) instanceof WP_User) {
             return $requestedAuthor;
         }
 

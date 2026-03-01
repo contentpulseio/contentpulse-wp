@@ -7,6 +7,7 @@ namespace ContentPulse\WordPress\Api;
 use ContentPulse\WordPress\Api\Controllers\IngestionController;
 use ContentPulse\WordPress\Api\Controllers\PostsController;
 use WP_REST_Request;
+use WP_REST_Response;
 
 class Routes
 {
@@ -82,11 +83,11 @@ class Routes
     /**
      * Return plugin version and compatibility information.
      */
-    public function pluginInfo(): \WP_REST_Response
+    public function pluginInfo(): WP_REST_Response
     {
         global $wp_version;
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'plugin_version' => CONTENTPULSE_WP_VERSION,
             'wordpress_version' => $wp_version,
             'php_version' => PHP_VERSION,
