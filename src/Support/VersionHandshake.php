@@ -46,7 +46,7 @@ class VersionHandshake
             return [
                 'compatible' => false,
                 'plugin_version' => CONTENTPULSE_WP_VERSION,
-                'message' => 'Authentication failed — check your API key.',
+                'message' => 'Authentication failed - check your API key.',
             ];
         } catch (Throwable $e) {
             return [

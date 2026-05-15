@@ -1,6 +1,6 @@
 {
     "name": "contentpulse/wordpress-plugin",
-    "description": "ContentPulse WordPress integration — auto-publish AI-generated content to your WordPress site.",
+    "description": "ContentPulse WordPress integration - auto-publish AI-generated content to your WordPress site.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "keywords": ["contentpulse", "wordpress", "plugin", "content", "seo", "ai"],

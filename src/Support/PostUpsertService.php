@@ -60,7 +60,7 @@ class PostUpsertService
         $postId = (int) $result;
 
         if ($contentPulseId) {
-            update_post_meta($postId, '_contentpulse_id', (int) $contentPulseId);
+            update_post_meta($postId, '_contentpulse_id', (string) $contentPulseId);
         }
 
         if ($featuredImageId) {
@@ -87,12 +87,17 @@ class PostUpsertService
             return null;
         }
 
+        $needle = trim((string) $contentPulseId);
+        if ($needle === '') {
+            return null;
+        }
+
         global $wpdb;
 
         $postId = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_id' AND meta_value = %d LIMIT 1",
-                (int) $contentPulseId,
+                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_id' AND meta_value = %s LIMIT 1",
+                $needle,
             ),
         );
 

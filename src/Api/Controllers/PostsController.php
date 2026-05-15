@@ -121,7 +121,7 @@ class PostsController
     private function normalizePayload(array $payload): array
     {
         return [
-            'contentpulse_id' => isset($payload['contentpulse_id']) ? (int) $payload['contentpulse_id'] : null,
+            'contentpulse_id' => isset($payload['contentpulse_id']) ? (string) $payload['contentpulse_id'] : null,
             'title' => trim((string) ($payload['title'] ?? '')),
             'body_html' => trim((string) ($payload['body_html'] ?? ($payload['content'] ?? ''))),
             'excerpt' => trim((string) ($payload['excerpt'] ?? '')),

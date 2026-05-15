@@ -246,7 +246,7 @@ final class Plugin
                     <tbody>
                     <?php foreach ($readyContents as $readyContent) { ?>
                         <?php
-                            $contentId = (int) ($readyContent['id'] ?? 0);
+                            $contentId = (string) ($readyContent['id'] ?? '');
                         $contentPulseViewUrl = $this->buildContentPulseContentUrl($contentId);
                         ?>
                         <tr>
@@ -304,7 +304,7 @@ final class Plugin
                                         <?php echo esc_html__('View', 'contentpulse-wp'); ?>
                                     </a>
                                 <?php } else { ?>
-                                    —
+                                    -
                                 <?php } ?>
                             </td>
                         </tr>
@@ -403,9 +403,9 @@ final class Plugin
         check_admin_referer('contentpulse_publish_ready');
 
         $contentId = isset($_POST['contentpulse_content_id'])
-            ? absint((string) wp_unslash($_POST['contentpulse_content_id']))
-            : 0;
-        if ($contentId <= 0) {
+            ? sanitize_text_field((string) wp_unslash($_POST['contentpulse_content_id']))
+            : '';
+        if ($contentId === '') {
             $this->redirectWithNotice('error', __('Please provide a valid ContentPulse content ID.', 'contentpulse-wp'));
         }
 
@@ -506,9 +506,9 @@ final class Plugin
         }
     }
 
-    private function buildContentPulseContentUrl(int $contentId): string
+    private function buildContentPulseContentUrl(string $contentId): string
     {
-        if ($contentId <= 0) {
+        if (trim($contentId) === '') {
             return '';
         }
 
