@@ -9,6 +9,7 @@ use ContentPulse\Core\DTO\ContentItem;
 use ContentPulse\Http\ContentPulseClient;
 use ContentPulse\WordPress\Api\Routes;
 use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
+use ContentPulse\WordPress\Support\PostUpsertService;
 use ContentPulse\WordPress\Support\SyncHistoryService;
 
 final class Plugin
@@ -239,21 +240,37 @@ final class Plugin
                         <th><?php echo esc_html__('ID', 'contentpulse-wp'); ?></th>
                         <th><?php echo esc_html__('Title', 'contentpulse-wp'); ?></th>
                         <th><?php echo esc_html__('Status', 'contentpulse-wp'); ?></th>
-                        <th><?php echo esc_html__('Updated', 'contentpulse-wp'); ?></th>
+                        <th><?php echo esc_html__('Date', 'contentpulse-wp'); ?></th>
                         <th><?php echo esc_html__('Actions', 'contentpulse-wp'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($readyContents as $readyContent) { ?>
-                        <?php
-                            $contentId = (string) ($readyContent['id'] ?? '');
-                        $contentPulseViewUrl = $this->buildContentPulseContentUrl($contentId);
-                        ?>
+                    <?php
+                        $upsertService = new PostUpsertService;
+                foreach ($readyContents as $readyContent) {
+                    $contentId = (string) ($readyContent['id'] ?? '');
+                    $contentPulseViewUrl = $this->buildContentPulseContentUrl($contentId);
+                    $existingPostId = $upsertService->findByContentPulseId($contentId);
+                    $existingPostUrl = $existingPostId ? get_permalink($existingPostId) : '';
+                    $readyStatus = (string) ($readyContent['status'] ?? '');
+                    $readyDate = match ($readyStatus) {
+                        'scheduled' => (string) ($readyContent['scheduled_at'] ?? ''),
+                        'published' => (string) ($readyContent['published_at'] ?? ''),
+                        default => '',
+                    };
+                    ?>
                         <tr>
                             <td><?php echo esc_html((string) ($readyContent['id'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($readyContent['title'] ?? '')); ?></td>
-                            <td><?php echo esc_html((string) ($readyContent['status'] ?? '')); ?></td>
-                            <td><?php echo esc_html((string) ($readyContent['updated_at'] ?? '')); ?></td>
+                            <td>
+                                <?php echo esc_html($readyStatus); ?>
+                                <?php if ($existingPostId) { ?>
+                                    <span style="display:inline-block; margin-left:6px; padding:1px 6px; border-radius:9999px; background:#d1fae5; color:#065f46; font-size:11px; font-weight:600;">
+                                        <?php echo esc_html__('Imported', 'contentpulse-wp'); ?>
+                                    </span>
+                                <?php } ?>
+                            </td>
+                            <td><?php echo esc_html($readyDate); ?></td>
                             <td>
                                 <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                                     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -261,9 +278,16 @@ final class Plugin
                                         <input type="hidden" name="contentpulse_content_id" value="<?php echo esc_attr((string) ($readyContent['id'] ?? '')); ?>">
                                         <?php wp_nonce_field('contentpulse_publish_ready'); ?>
                                         <button type="submit" class="button button-secondary">
-                                            <?php echo esc_html__('Publish to WordPress', 'contentpulse-wp'); ?>
+                                            <?php echo $existingPostId
+                                        ? esc_html__('Re-publish', 'contentpulse-wp')
+                                        : esc_html__('Publish to WordPress', 'contentpulse-wp'); ?>
                                         </button>
                                     </form>
+                                    <?php if ($existingPostId && $existingPostUrl) { ?>
+                                        <a href="<?php echo esc_url((string) $existingPostUrl); ?>" class="button" target="_blank" rel="noreferrer">
+                                            <?php echo esc_html__('View post', 'contentpulse-wp'); ?>
+                                        </a>
+                                    <?php } ?>
                                     <?php if ($contentPulseViewUrl !== '') { ?>
                                         <a href="<?php echo esc_url($contentPulseViewUrl); ?>" class="button" target="_blank" rel="noreferrer">
                                             <?php echo esc_html__('View in ContentPulse', 'contentpulse-wp'); ?>
@@ -292,14 +316,23 @@ final class Plugin
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($recentSyncs as $sync) { ?>
+                    <?php foreach ($recentSyncs as $sync) {
+                        $syncContentId = (string) ($sync['contentpulse_id'] ?? '');
+                        $isUlid = preg_match('/^[0-9A-HJKMNP-TV-Z]{26}$/', $syncContentId) === 1;
+                        $syncPostId = isset($sync['post_id']) ? (int) $sync['post_id'] : 0;
+                        $syncEditUrl = $syncPostId > 0 ? get_edit_post_link($syncPostId, '') : '';
+                        ?>
                         <tr>
                             <td><?php echo esc_html((string) ($sync['synced_at'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($sync['action'] ?? '')); ?></td>
                             <td><?php echo esc_html((string) ($sync['title'] ?? '')); ?></td>
-                            <td><?php echo esc_html((string) ($sync['contentpulse_id'] ?? '')); ?></td>
+                            <td><?php echo $isUlid ? esc_html($syncContentId) : '—'; ?></td>
                             <td>
-                                <?php if (! empty($sync['url'])) { ?>
+                                <?php if ($syncEditUrl !== '') { ?>
+                                    <a href="<?php echo esc_url((string) $syncEditUrl); ?>">
+                                        <?php echo esc_html__('Edit', 'contentpulse-wp'); ?>
+                                    </a>
+                                <?php } elseif (! empty($sync['url'])) { ?>
                                     <a href="<?php echo esc_url((string) $sync['url']); ?>" target="_blank" rel="noreferrer">
                                         <?php echo esc_html__('View', 'contentpulse-wp'); ?>
                                     </a>
@@ -468,7 +501,7 @@ final class Plugin
     }
 
     /**
-     * @return array{0: array<int, array{id: int, title: string, status: string, updated_at: string}>, 1: string}
+     * @return array{0: array<int, array{id: string, title: string, status: string, updated_at: string, published_at: string, scheduled_at: string}>, 1: string}
      */
     private function fetchReadyContents(string $apiKey): array
     {
@@ -497,6 +530,8 @@ final class Plugin
                     'title' => $item->title !== '' ? $item->title : $item->slug,
                     'status' => $status !== '' ? $status : 'unknown',
                     'updated_at' => $item->updatedAt?->format('Y-m-d H:i') ?? '',
+                    'published_at' => $item->publishedAt?->format('Y-m-d H:i') ?? '',
+                    'scheduled_at' => $item->scheduledAt?->format('Y-m-d H:i') ?? '',
                 ];
             }
 
