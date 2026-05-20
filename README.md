@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/contentpulseio/contentpulse-wp/actions/workflows/ci.yml/badge.svg)](https://github.com/contentpulseio/contentpulse-wp/actions/workflows/ci.yml)
 
-Auto-publish AI-generated content from ContentPulse to your WordPress site.
+Auto-publish AI-generated, SEO-optimized content from [ContentPulse](https://contentpulse.io) to your WordPress site.
 
 ## Requirements
 
@@ -11,69 +11,42 @@ Auto-publish AI-generated content from ContentPulse to your WordPress site.
 
 ## Installation
 
-### Manual
-
 1. Download the plugin ZIP or clone this repository
-2. Upload to `wp-content/plugins/`
-3. Activate the plugin in WordPress admin
-
-### Composer
-
-```bash
-composer require contentpulse/wordpress-plugin
-```
+2. Upload the `contentpulse-wp` folder to `wp-content/plugins/`
+3. Activate the plugin in the WordPress admin **Plugins** menu
 
 ## Configuration
 
 1. Go to **Settings > ContentPulse** in WordPress admin
-2. Enter one **Settings API Key**
+2. Enter your ContentPulse API key
 3. Save the settings
 4. Use **Test Connection** to verify connectivity
 
-The SDK resolves ContentPulse endpoints with built-in defaults:
-- API base: `https://api.contentpulse.io`
-- App base: `https://app.contentpulse.io`
+Once connected, content publishes to your site automatically when it is published in ContentPulse.
 
-Optional overrides are available through `CONTENTPULSE_API_URL` and
-`CONTENTPULSE_APP_URL` (or the `contentpulse_api_base_url` / `contentpulse_app_base_url` filters).
+## Getting an API Key
+
+Sign up at [contentpulse.io](https://contentpulse.io) and generate an API key from your dashboard settings.
 
 ## Features
 
 - Automatic post creation and updates
-- Thin ingestion connector (main ContentPulse application controls payload and publishing logic)
-- Featured image sideloading
-- SEO meta integration (Yoast SEO, Rank Math)
+- AI-generated, SEO-optimized content in multiple languages
+- Refresh & rewrite of older content
+- Content-relevant generated images with featured image sideloading
+- Custom watermark logo on generated images
+- Internet search research for accurate, up-to-date content
+- Knowledge base document uploads for richer content and authority
 - Category and tag auto-assignment
 - Scheduled content support
 - Block editor compatibility
+- Webhook integrations
+- Version history
 - Recent sync history in plugin admin
 
-## REST API Endpoints
+## Support
 
-All endpoints require authentication via the `X-ContentPulse-Key` header.
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/wp-json/contentpulse/v1/plugin-info` | Plugin version and compatibility info |
-| POST | `/wp-json/contentpulse/v1/posts` | Create or update a post |
-| GET | `/wp-json/contentpulse/v1/posts/{id}` | Retrieve a post by ID |
-| DELETE | `/wp-json/contentpulse/v1/posts/{id}` | Delete a post |
-| GET | `/wp-json/contentpulse/v1/ingestion/status` | Ingestion status |
-
-## Authentication
-
-Include your API key in the request header:
-
-```
-X-ContentPulse-Key: your-api-key
-```
-
-## Testing
-
-```bash
-composer install
-./vendor/bin/phpunit
-```
+Questions or issues? Visit [contentpulse.io](https://contentpulse.io) or open an issue in this repository.
 
 ## License
 

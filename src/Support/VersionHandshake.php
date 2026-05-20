@@ -34,7 +34,7 @@ class VersionHandshake
         }
 
         try {
-            $client = new ContentPulseClient($apiUrl, $apiKey);
+            $client = new ContentPulseClient(apiKey: $apiKey, baseUrl: $apiUrl);
             $feed = $client->getContentFeed();
 
             return [

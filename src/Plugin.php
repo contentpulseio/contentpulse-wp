@@ -411,7 +411,7 @@ final class Plugin
         $baseUrl = $this->resolveContentPulseApiBaseUrl();
 
         try {
-            $client = new ContentPulseClient($baseUrl, $apiKey);
+            $client = new ContentPulseClient(apiKey: $apiKey, baseUrl: $baseUrl);
             $feed = $client->getContentFeed(new ContentFilters(
                 page: 1,
                 perPage: 1,
@@ -508,7 +508,7 @@ final class Plugin
         $baseUrl = $this->resolveContentPulseApiBaseUrl();
 
         try {
-            $client = new ContentPulseClient($baseUrl, $apiKey);
+            $client = new ContentPulseClient(apiKey: $apiKey, baseUrl: $baseUrl);
             $items = [];
             $feed = $client->getContentFeed(new ContentFilters(
                 page: 1,

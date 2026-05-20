@@ -17,8 +17,12 @@ ContentPulse connects your WordPress site to the ContentPulse.io content generat
 Features:
 
 * Automatic post creation and updates from ContentPulse
-* Featured image sideloading
-* SEO meta field integration (Yoast SEO, Rank Math)
+* AI-generated, SEO-optimized content in multiple languages
+* Refresh & rewrite of older content
+* Content-relevant generated images with featured image sideloading
+* Custom watermark logo on generated images
+* Internet search research for accurate, up-to-date content
+* Knowledge base document uploads for richer content and authority
 * Category and tag auto-assignment
 * Scheduled content support
 * WordPress block editor compatibility
