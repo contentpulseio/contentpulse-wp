@@ -1,8 +1,8 @@
 === ContentPulse ===
 Contributors: contentpulse
 Tags: content, ai, seo, publishing, automation
-Requires at least: 5.0
-Tested up to: 6.7
+Requires at least: 5.9
+Tested up to: 7.0
 Requires PHP: 8.2
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -45,6 +45,16 @@ Sign up at contentpulse.io and generate an API key from your dashboard settings.
 = Does this work with the block editor? =
 
 Yes, content is delivered as WordPress block markup when supported.
+
+== External Services ==
+
+This plugin connects to the ContentPulse API (https://www.contentpulse.io) to receive generated content and verify API compatibility.
+
+* What is sent: your configured API key and the plugin version (during the compatibility handshake), and sync acknowledgements for content delivered to your site.
+* When: only after you enter an API key under Settings > ContentPulse. No data is sent before the plugin is configured.
+* Service provider: ContentPulse (https://www.contentpulse.io)
+* Terms of service: https://www.contentpulse.io/terms
+* Privacy policy: https://www.contentpulse.io/privacy
 
 == Changelog ==
 
