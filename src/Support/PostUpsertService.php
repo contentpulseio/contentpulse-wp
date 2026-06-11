@@ -94,6 +94,7 @@ class PostUpsertService
 
         global $wpdb;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared meta lookup by value; runs once per sync to map remote IDs to posts.
         $postId = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_id' AND meta_value = %s LIMIT 1",

@@ -165,7 +165,9 @@ final class Plugin
             [$readyContents, $readyContentsError] = $this->fetchReadyContents($settingsApiKey);
         }
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display, sanitized and escaped on output.
         $noticeMessage = isset($_GET['contentpulse_notice']) ? sanitize_text_field(wp_unslash($_GET['contentpulse_notice'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display, sanitized and escaped on output.
         $noticeType = isset($_GET['contentpulse_notice_type']) ? sanitize_key(wp_unslash($_GET['contentpulse_notice_type'])) : '';
         $noticeClass = $noticeType === 'success' ? 'notice notice-success' : 'notice notice-error';
 

@@ -53,6 +53,7 @@ class MediaSideloadService
     {
         global $wpdb;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared meta lookup by value; runs once per sideload to deduplicate attachments.
         $attachmentId = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_source_url' AND meta_value = %s LIMIT 1",
@@ -87,7 +88,7 @@ class MediaSideloadService
             return null;
         }
 
-        $path = (string) parse_url($url, PHP_URL_PATH);
+        $path = (string) wp_parse_url($url, PHP_URL_PATH);
         $filename = basename($path);
         if ($filename === '' || $filename === '/' || str_contains($filename, '?')) {
             $filename = 'contentpulse-image-'.gmdate('YmdHis').'.jpg';
@@ -101,7 +102,7 @@ class MediaSideloadService
 
         $written = file_put_contents($tmpFile, $body);
         if ($written === false) {
-            @unlink($tmpFile);
+            wp_delete_file($tmpFile);
 
             return null;
         }
@@ -113,7 +114,7 @@ class MediaSideloadService
 
         $attachmentId = media_handle_sideload($fileArray, 0, $description);
         if (is_wp_error($attachmentId)) {
-            @unlink($tmpFile);
+            wp_delete_file($tmpFile);
 
             return null;
         }
