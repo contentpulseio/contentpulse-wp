@@ -4,7 +4,7 @@ use ContentPulse\WordPress\Plugin;
 
 /**
  * Plugin Name: ContentPulse
- * Plugin URI: https://contentpulse.io
+ * Plugin URI: https://contentpulse.io/wordpress
  * Description: Auto-publish AI-generated content from ContentPulse to your WordPress site.
  * Version: 1.0.0
  * Author: ContentPulse
