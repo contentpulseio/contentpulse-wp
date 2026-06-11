@@ -44,6 +44,38 @@ Sign up at [contentpulse.io](https://contentpulse.io) and generate an API key fr
 - Version history
 - Recent sync history in plugin admin
 
+## Screenshots
+
+### 1. Install
+
+Upload the ContentPulse plugin zip from **Plugins > Add Plugin > Upload Plugin**.
+
+![Upload the ContentPulse plugin zip](.wordpress-org/screenshot-1.png)
+
+### 2. Activate
+
+Activate ContentPulse from the Plugins list.
+
+![Activate ContentPulse from the Plugins list](.wordpress-org/screenshot-2.png)
+
+### 3. Configure
+
+Configure your Settings API Key and run quick connection checks under **Settings > ContentPulse**.
+
+![Configure your Settings API Key](.wordpress-org/screenshot-3.png)
+
+### 4. Publish
+
+Publish-ready ContentPulse content is loaded automatically and can be published to WordPress with one click.
+
+![Publish-ready ContentPulse content](.wordpress-org/screenshot-4.png)
+
+### 5. Result
+
+A published post on your site, complete with an AI-generated featured image.
+
+![A published post with an AI-generated featured image](.wordpress-org/screenshot-5.png)
+
 ## Support
 
 Questions or issues? Visit [contentpulse.io](https://contentpulse.io) or open an issue in this repository.
