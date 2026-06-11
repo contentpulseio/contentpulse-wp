@@ -14,6 +14,7 @@ use ContentPulse\WordPress\Plugin;
  * Text Domain: contentpulse-wp
  * Requires at least: 5.9
  * Requires PHP: 8.2
+ * Update URI: https://github.com/contentpulseio/contentpulse-wp
  */
 if (! defined('ABSPATH')) {
     exit;
