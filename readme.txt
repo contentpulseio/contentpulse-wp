@@ -46,6 +46,14 @@ Sign up at contentpulse.io and generate an API key from your dashboard settings.
 
 Yes, content is delivered as WordPress block markup when supported.
 
+== Screenshots ==
+
+1. Upload the ContentPulse plugin zip from Plugins > Add Plugin > Upload Plugin.
+2. Activate ContentPulse from the Plugins list.
+3. Configure your Settings API Key and run quick connection checks under Settings > ContentPulse.
+4. Publish-ready ContentPulse content is loaded automatically and can be published to WordPress with one click.
+5. A published post on your site, complete with an AI-generated featured image.
+
 == External Services ==
 
 This plugin connects to the ContentPulse API (https://www.contentpulse.io) to receive generated content and verify API compatibility.
