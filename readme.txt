@@ -1,5 +1,5 @@
-=== ContentPulse ===
-Contributors: contentpulse
+=== ContentPulse - AI SEO Content ===
+Contributors: contentpulseio
 Tags: content, ai, seo, publishing, automation
 Requires at least: 5.9
 Tested up to: 7.0
@@ -30,7 +30,7 @@ Features:
 
 == Installation ==
 
-1. Upload the `contentpulse-wp` folder to `/wp-content/plugins/`
+1. Upload the `contentpulse-ai-seo-content` folder to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Settings > ContentPulse
 4. Enter one Settings API Key

@@ -3,15 +3,15 @@
 use ContentPulse\WordPress\Plugin;
 
 /**
- * Plugin Name: ContentPulse
+ * Plugin Name: ContentPulse - AI SEO Content
  * Plugin URI: https://contentpulse.io/wordpress
- * Description: Auto-publish AI-generated content from ContentPulse to your WordPress site.
+ * Description: Auto-publish AI-generated, SEO-optimized content from ContentPulse to your WordPress site.
  * Version: 1.0.0
  * Author: ContentPulse
  * Author URI: https://contentpulse.io
  * License: GPL-2.0-or-later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: contentpulse-wp
+ * Text Domain: contentpulse-ai-seo-content
  * Requires at least: 5.9
  * Requires PHP: 8.2
  * Update URI: https://github.com/contentpulseio/contentpulse-wp
