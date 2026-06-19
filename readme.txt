@@ -1,6 +1,6 @@
-=== ContentPulse - AI SEO Content ===
+=== ContentPulse - AI SEO Autoblogger ===
 Contributors: contentpulseio
-Tags: content, ai, seo, publishing, automation
+Tags: autoblogger, ai content, content publisher, auto publish, seo content
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 8.2
@@ -8,11 +8,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Auto-publish AI-generated, SEO-optimized content from the ContentPulse platform to your WordPress site.
+AI SEO autoblogger that auto-publishes AI-generated, SEO-optimized content from the ContentPulse platform to your WordPress site.
 
 == Description ==
 
-ContentPulse - AI SEO Content connects your WordPress site to the ContentPulse platform (https://www.contentpulse.io). It receives AI-generated, SEO-optimized articles and publishes them directly to your site.
+ContentPulse - AI SEO Autoblogger connects your WordPress site to the ContentPulse platform (https://www.contentpulse.io). It works as an AI content publisher: it receives AI-generated, SEO-optimized articles and auto-publishes them directly to your site.
 
 The plugin is a connector: a ContentPulse account is required to generate content (paid plans). The plugin itself is free and works standalone to receive and publish content delivered from the platform. This is not affiliated with any other similarly named plugin; it is the official connector for the ContentPulse service.
 
@@ -32,7 +32,7 @@ Features:
 
 == Installation ==
 
-1. Upload the `contentpulse-ai-seo-content` folder to `/wp-content/plugins/`
+1. Upload the `contentpulse-ai-seo-autoblogger` folder to `/wp-content/plugins/`
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to Settings > ContentPulse
 4. Enter one Settings API Key

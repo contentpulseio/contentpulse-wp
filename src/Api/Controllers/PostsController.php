@@ -31,7 +31,7 @@ class PostsController
         if ($payload['title'] === '') {
             return new WP_Error(
                 'missing_title',
-                __('Title is required.', 'contentpulse-ai-seo-content'),
+                __('Title is required.', 'contentpulse-ai-seo-autoblogger'),
                 ['status' => 422],
             );
         }
@@ -66,7 +66,7 @@ class PostsController
         if (! $post) {
             return new WP_Error(
                 'not_found',
-                __('Post not found.', 'contentpulse-ai-seo-content'),
+                __('Post not found.', 'contentpulse-ai-seo-autoblogger'),
                 ['status' => 404],
             );
         }
@@ -96,7 +96,7 @@ class PostsController
         if (! $post) {
             return new WP_Error(
                 'not_found',
-                __('Post not found.', 'contentpulse-ai-seo-content'),
+                __('Post not found.', 'contentpulse-ai-seo-autoblogger'),
                 ['status' => 404],
             );
         }
@@ -106,7 +106,7 @@ class PostsController
         if (! $deleted) {
             return new WP_Error(
                 'delete_failed',
-                __('Failed to delete post.', 'contentpulse-ai-seo-content'),
+                __('Failed to delete post.', 'contentpulse-ai-seo-autoblogger'),
                 ['status' => 500],
             );
         }

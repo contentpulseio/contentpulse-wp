@@ -149,8 +149,8 @@ final class Plugin
     public function registerSettingsPage(): void
     {
         add_options_page(
-            __('ContentPulse Settings', 'contentpulse-ai-seo-content'),
-            __('ContentPulse', 'contentpulse-ai-seo-content'),
+            __('ContentPulse Settings', 'contentpulse-ai-seo-autoblogger'),
+            __('ContentPulse', 'contentpulse-ai-seo-autoblogger'),
             'manage_options',
             'cpulse-settings',
             [$this, 'renderSettingsPage'],
@@ -180,7 +180,7 @@ final class Plugin
 
         ?>
         <div class="wrap">
-            <h1><?php echo esc_html__('ContentPulse Settings', 'contentpulse-ai-seo-content'); ?></h1>
+            <h1><?php echo esc_html__('ContentPulse Settings', 'contentpulse-ai-seo-autoblogger'); ?></h1>
 
             <?php if ($noticeMessage !== '') { ?>
                 <div class="<?php echo esc_attr($noticeClass); ?>">
@@ -188,14 +188,14 @@ final class Plugin
                 </div>
             <?php } ?>
 
-            <h2><?php echo esc_html__('1) Configure settings API key', 'contentpulse-ai-seo-content'); ?></h2>
+            <h2><?php echo esc_html__('1) Configure settings API key', 'contentpulse-ai-seo-autoblogger'); ?></h2>
             <form method="post" action="options.php">
                 <?php settings_fields('cpulse_settings'); ?>
                 <table class="form-table" role="presentation">
                     <tbody>
                     <tr>
                         <th scope="row">
-                            <label for="cpulse_api_key"><?php echo esc_html__('Settings API Key', 'contentpulse-ai-seo-content'); ?></label>
+                            <label for="cpulse_api_key"><?php echo esc_html__('Settings API Key', 'contentpulse-ai-seo-autoblogger'); ?></label>
                         </th>
                         <td>
                             <input
@@ -207,50 +207,50 @@ final class Plugin
                                 autocomplete="off"
                             >
                             <p class="description">
-                                <?php echo esc_html__('Use one key for both directions: ContentPulse -> WordPress ingestion and WordPress -> ContentPulse publish-ready requests.', 'contentpulse-ai-seo-content'); ?>
+                                <?php echo esc_html__('Use one key for both directions: ContentPulse -> WordPress ingestion and WordPress -> ContentPulse publish-ready requests.', 'contentpulse-ai-seo-autoblogger'); ?>
                             </p>
                         </td>
                     </tr>
                     </tbody>
                 </table>
-                <?php submit_button(__('Save Settings API Key', 'contentpulse-ai-seo-content')); ?>
+                <?php submit_button(__('Save Settings API Key', 'contentpulse-ai-seo-autoblogger')); ?>
             </form>
 
-            <h2><?php echo esc_html__('2) Run quick checks', 'contentpulse-ai-seo-content'); ?></h2>
+            <h2><?php echo esc_html__('2) Run quick checks', 'contentpulse-ai-seo-autoblogger'); ?></h2>
             <div style="display:flex; gap:10px; align-items:center;">
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="cpulse_test_connection">
                     <?php wp_nonce_field('cpulse_test_connection'); ?>
-                    <?php submit_button(__('Test Connection', 'contentpulse-ai-seo-content'), 'secondary', 'submit', false); ?>
+                    <?php submit_button(__('Test Connection', 'contentpulse-ai-seo-autoblogger'), 'secondary', 'submit', false); ?>
                 </form>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="cpulse_test_api_key">
                     <?php wp_nonce_field('cpulse_test_api_key'); ?>
-                    <?php submit_button(__('Test API Key (ContentPulse)', 'contentpulse-ai-seo-content'), 'secondary', 'submit', false); ?>
+                    <?php submit_button(__('Test API Key (ContentPulse)', 'contentpulse-ai-seo-autoblogger'), 'secondary', 'submit', false); ?>
                 </form>
             </div>
 
-            <h2><?php echo esc_html__('3) Publish ready ContentPulse content', 'contentpulse-ai-seo-content'); ?></h2>
+            <h2><?php echo esc_html__('3) Publish ready ContentPulse content', 'contentpulse-ai-seo-autoblogger'); ?></h2>
             <p class="description">
-                <?php echo esc_html__('Ready contents are loaded from ContentPulse automatically via SDK.', 'contentpulse-ai-seo-content'); ?>
+                <?php echo esc_html__('Ready contents are loaded from ContentPulse automatically via SDK.', 'contentpulse-ai-seo-autoblogger'); ?>
             </p>
             <?php if ($settingsApiKey === '') { ?>
-                <p><?php echo esc_html__('Save your settings API key to load ready contents.', 'contentpulse-ai-seo-content'); ?></p>
+                <p><?php echo esc_html__('Save your settings API key to load ready contents.', 'contentpulse-ai-seo-autoblogger'); ?></p>
             <?php } elseif ($readyContentsError !== '') { ?>
                 <div class="notice notice-error inline">
                     <p><?php echo esc_html($readyContentsError); ?></p>
                 </div>
             <?php } elseif (empty($readyContents)) { ?>
-                <p><?php echo esc_html__('No ready contents found right now.', 'contentpulse-ai-seo-content'); ?></p>
+                <p><?php echo esc_html__('No ready contents found right now.', 'contentpulse-ai-seo-autoblogger'); ?></p>
             <?php } else { ?>
                 <table class="widefat striped">
                     <thead>
                     <tr>
-                        <th><?php echo esc_html__('ID', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Title', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Status', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Date', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Actions', 'contentpulse-ai-seo-content'); ?></th>
+                        <th><?php echo esc_html__('ID', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Title', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Status', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Date', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Actions', 'contentpulse-ai-seo-autoblogger'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -275,7 +275,7 @@ final class Plugin
                                 <?php echo esc_html($readyStatus); ?>
                                 <?php if ($existingPostId) { ?>
                                     <span style="display:inline-block; margin-left:6px; padding:1px 6px; border-radius:9999px; background:#d1fae5; color:#065f46; font-size:11px; font-weight:600;">
-                                        <?php echo esc_html__('Imported', 'contentpulse-ai-seo-content'); ?>
+                                        <?php echo esc_html__('Imported', 'contentpulse-ai-seo-autoblogger'); ?>
                                     </span>
                                 <?php } ?>
                             </td>
@@ -288,18 +288,18 @@ final class Plugin
                                         <?php wp_nonce_field('cpulse_publish_ready'); ?>
                                         <button type="submit" class="button button-secondary">
                                             <?php echo $existingPostId
-                                        ? esc_html__('Re-publish', 'contentpulse-ai-seo-content')
-                                        : esc_html__('Publish to WordPress', 'contentpulse-ai-seo-content'); ?>
+                                        ? esc_html__('Re-publish', 'contentpulse-ai-seo-autoblogger')
+                                        : esc_html__('Publish to WordPress', 'contentpulse-ai-seo-autoblogger'); ?>
                                         </button>
                                     </form>
                                     <?php if ($existingPostId && $existingPostUrl) { ?>
                                         <a href="<?php echo esc_url((string) $existingPostUrl); ?>" class="button" target="_blank" rel="noreferrer">
-                                            <?php echo esc_html__('View post', 'contentpulse-ai-seo-content'); ?>
+                                            <?php echo esc_html__('View post', 'contentpulse-ai-seo-autoblogger'); ?>
                                         </a>
                                     <?php } ?>
                                     <?php if ($contentPulseViewUrl !== '') { ?>
                                         <a href="<?php echo esc_url($contentPulseViewUrl); ?>" class="button" target="_blank" rel="noreferrer">
-                                            <?php echo esc_html__('View in ContentPulse', 'contentpulse-ai-seo-content'); ?>
+                                            <?php echo esc_html__('View in ContentPulse', 'contentpulse-ai-seo-autoblogger'); ?>
                                         </a>
                                     <?php } ?>
                                 </div>
@@ -310,18 +310,18 @@ final class Plugin
                 </table>
             <?php } ?>
 
-            <h2><?php echo esc_html__('4) Recent Syncs', 'contentpulse-ai-seo-content'); ?></h2>
+            <h2><?php echo esc_html__('4) Recent Syncs', 'contentpulse-ai-seo-autoblogger'); ?></h2>
             <?php if (empty($recentSyncs)) { ?>
-                <p><?php echo esc_html__('No sync activity yet.', 'contentpulse-ai-seo-content'); ?></p>
+                <p><?php echo esc_html__('No sync activity yet.', 'contentpulse-ai-seo-autoblogger'); ?></p>
             <?php } else { ?>
                 <table class="widefat striped">
                     <thead>
                     <tr>
-                        <th><?php echo esc_html__('Time', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Action', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Title', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('ContentPulse ID', 'contentpulse-ai-seo-content'); ?></th>
-                        <th><?php echo esc_html__('Post', 'contentpulse-ai-seo-content'); ?></th>
+                        <th><?php echo esc_html__('Time', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Action', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Title', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('ContentPulse ID', 'contentpulse-ai-seo-autoblogger'); ?></th>
+                        <th><?php echo esc_html__('Post', 'contentpulse-ai-seo-autoblogger'); ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -339,11 +339,11 @@ final class Plugin
                             <td>
                                 <?php if ($syncEditUrl !== '') { ?>
                                     <a href="<?php echo esc_url((string) $syncEditUrl); ?>">
-                                        <?php echo esc_html__('Edit', 'contentpulse-ai-seo-content'); ?>
+                                        <?php echo esc_html__('Edit', 'contentpulse-ai-seo-autoblogger'); ?>
                                     </a>
                                 <?php } elseif (! empty($sync['url'])) { ?>
                                     <a href="<?php echo esc_url((string) $sync['url']); ?>" target="_blank" rel="noreferrer">
-                                        <?php echo esc_html__('View', 'contentpulse-ai-seo-content'); ?>
+                                        <?php echo esc_html__('View', 'contentpulse-ai-seo-autoblogger'); ?>
                                     </a>
                                 <?php } else { ?>
                                     -
@@ -355,11 +355,11 @@ final class Plugin
                 </table>
             <?php } ?>
 
-            <h2><?php echo esc_html__('Quick Start', 'contentpulse-ai-seo-content'); ?></h2>
+            <h2><?php echo esc_html__('Quick Start', 'contentpulse-ai-seo-autoblogger'); ?></h2>
             <ol>
-                <li><?php echo esc_html__('Save one Settings API Key above.', 'contentpulse-ai-seo-content'); ?></li>
-                <li><?php echo esc_html__('Use Test Connection to verify end-to-end flow.', 'contentpulse-ai-seo-content'); ?></li>
-                <li><?php echo esc_html__('Choose any ready content from the list and click Publish to WordPress.', 'contentpulse-ai-seo-content'); ?></li>
+                <li><?php echo esc_html__('Save one Settings API Key above.', 'contentpulse-ai-seo-autoblogger'); ?></li>
+                <li><?php echo esc_html__('Use Test Connection to verify end-to-end flow.', 'contentpulse-ai-seo-autoblogger'); ?></li>
+                <li><?php echo esc_html__('Choose any ready content from the list and click Publish to WordPress.', 'contentpulse-ai-seo-autoblogger'); ?></li>
             </ol>
         </div>
         <?php
@@ -377,20 +377,20 @@ final class Plugin
     public function handleTestConnection(): void
     {
         if (! current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
+            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-autoblogger'));
         }
         check_admin_referer('cpulse_test_connection');
 
         $key = (string) get_option('cpulse_api_key', '');
         if ($key === '') {
-            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
+            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-autoblogger'));
         }
 
         $response = $this->dispatchInternalRestRequest('GET', '/contentpulse/v1/plugin-info', [], $key);
         $status = $response->get_status();
         $body = $response->get_data();
         if ($status !== 200) {
-            $message = __('Connection failed with HTTP ', 'contentpulse-ai-seo-content').$status;
+            $message = __('Connection failed with HTTP ', 'contentpulse-ai-seo-autoblogger').$status;
             if (is_array($body) && isset($body['message']) && is_string($body['message'])) {
                 $message .= ': '.$body['message'];
             }
@@ -400,7 +400,7 @@ final class Plugin
         $pluginVersion = is_array($body) ? (string) ($body['plugin_version'] ?? CPULSE_VERSION) : CPULSE_VERSION;
         $this->redirectWithNotice('success', sprintf(
             /* translators: %s: plugin version */
-            __('Connection successful. Plugin version: %s', 'contentpulse-ai-seo-content'),
+            __('Connection successful. Plugin version: %s', 'contentpulse-ai-seo-autoblogger'),
             $pluginVersion,
         ));
     }
@@ -408,13 +408,13 @@ final class Plugin
     public function handleTestApiKey(): void
     {
         if (! current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
+            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-autoblogger'));
         }
         check_admin_referer('cpulse_test_api_key');
 
         $apiKey = trim((string) get_option('cpulse_api_key', ''));
         if ($apiKey === '') {
-            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
+            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-autoblogger'));
         }
 
         $baseUrl = $this->resolveContentPulseApiBaseUrl();
@@ -429,18 +429,18 @@ final class Plugin
 
             $this->redirectWithNotice('success', sprintf(
                 /* translators: %d: number of items returned from first page */
-                __('API key test successful. Connected to ContentPulse and fetched %d item(s) from page 1.', 'contentpulse-ai-seo-content'),
+                __('API key test successful. Connected to ContentPulse and fetched %d item(s) from page 1.', 'contentpulse-ai-seo-autoblogger'),
                 $itemCount
             ));
         } catch (\Throwable $exception) {
-            $this->redirectWithNotice('error', __('API key test failed: ', 'contentpulse-ai-seo-content').$exception->getMessage());
+            $this->redirectWithNotice('error', __('API key test failed: ', 'contentpulse-ai-seo-autoblogger').$exception->getMessage());
         }
     }
 
     public function handlePublishReadyContent(): void
     {
         if (! current_user_can('manage_options')) {
-            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
+            wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-autoblogger'));
         }
         check_admin_referer('cpulse_publish_ready');
 
@@ -448,13 +448,13 @@ final class Plugin
             ? sanitize_text_field((string) wp_unslash($_POST['cpulse_content_id']))
             : '';
         if ($contentId === '') {
-            $this->redirectWithNotice('error', __('Please provide a valid ContentPulse content ID.', 'contentpulse-ai-seo-content'));
+            $this->redirectWithNotice('error', __('Please provide a valid ContentPulse content ID.', 'contentpulse-ai-seo-autoblogger'));
         }
 
         $sourceApiUrl = $this->resolveContentPulseApiBaseUrl();
         $sourceApiKey = trim((string) get_option('cpulse_api_key', ''));
         if ($sourceApiKey === '') {
-            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
+            $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-autoblogger'));
         }
         $endpoint = ContentPulseEndpointResolver::buildPublishWordPressEndpoint($sourceApiUrl, $contentId);
         $response = wp_remote_post($endpoint, [
@@ -469,14 +469,14 @@ final class Plugin
         ]);
 
         if (is_wp_error($response)) {
-            $this->redirectWithNotice('error', __('Ready content publish failed: ', 'contentpulse-ai-seo-content').$response->get_error_message());
+            $this->redirectWithNotice('error', __('Ready content publish failed: ', 'contentpulse-ai-seo-autoblogger').$response->get_error_message());
         }
 
         $status = (int) wp_remote_retrieve_response_code($response);
         $body = wp_remote_retrieve_body($response);
         $decoded = json_decode((string) $body, true);
         if ($status < 200 || $status >= 300 || ! is_array($decoded)) {
-            $message = __('Ready content publish failed with HTTP ', 'contentpulse-ai-seo-content').$status;
+            $message = __('Ready content publish failed with HTTP ', 'contentpulse-ai-seo-autoblogger').$status;
             if (is_array($decoded) && isset($decoded['message']) && is_string($decoded['message'])) {
                 $message .= ': '.$decoded['message'];
             }
@@ -490,7 +490,7 @@ final class Plugin
                 : '';
         }
 
-        $message = __('Ready content published to WordPress successfully.', 'contentpulse-ai-seo-content');
+        $message = __('Ready content published to WordPress successfully.', 'contentpulse-ai-seo-autoblogger');
         if (isset($decoded['message']) && is_string($decoded['message']) && trim($decoded['message']) !== '') {
             $message = $decoded['message'];
         }
@@ -546,7 +546,7 @@ final class Plugin
 
             return [$items, ''];
         } catch (\Throwable $exception) {
-            return [[], __('Failed to load ready contents: ', 'contentpulse-ai-seo-content').$exception->getMessage()];
+            return [[], __('Failed to load ready contents: ', 'contentpulse-ai-seo-autoblogger').$exception->getMessage()];
         }
     }
 
