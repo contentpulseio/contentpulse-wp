@@ -20,7 +20,7 @@ class UpdateChecker
 
     private const RELEASE_ASSET_NAME = 'contentpulse-wp.zip';
 
-    private const TRANSIENT_KEY = 'contentpulse_wp_latest_release';
+    private const TRANSIENT_KEY = 'cpulse_latest_release';
 
     private const CACHE_TTL_SECONDS = 21600; // 6 hours
 
@@ -44,7 +44,7 @@ class UpdateChecker
      */
     public function provideUpdateInfo(mixed $update, array $pluginData, string $pluginFile): mixed
     {
-        if ($pluginFile !== plugin_basename(CONTENTPULSE_WP_FILE)) {
+        if ($pluginFile !== plugin_basename(CPULSE_FILE)) {
             return $update;
         }
 
@@ -140,7 +140,7 @@ class UpdateChecker
                 'timeout' => 10,
                 'headers' => [
                     'Accept' => 'application/vnd.github+json',
-                    'User-Agent' => 'contentpulse-wp/'.CONTENTPULSE_WP_VERSION,
+                    'User-Agent' => 'contentpulse-wp/'.CPULSE_VERSION,
                 ],
             ],
         );

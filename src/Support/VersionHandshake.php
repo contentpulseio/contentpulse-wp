@@ -23,12 +23,12 @@ class VersionHandshake
     public function check(): array
     {
         $apiUrl = $this->resolveContentPulseApiBaseUrl();
-        $apiKey = get_option('contentpulse_api_key', '');
+        $apiKey = get_option('cpulse_api_key', '');
 
         if (empty($apiUrl) || empty($apiKey)) {
             return [
                 'compatible' => false,
-                'plugin_version' => CONTENTPULSE_WP_VERSION,
+                'plugin_version' => CPULSE_VERSION,
                 'message' => 'Settings API key must be configured.',
             ];
         }
@@ -39,19 +39,19 @@ class VersionHandshake
 
             return [
                 'compatible' => true,
-                'plugin_version' => CONTENTPULSE_WP_VERSION,
+                'plugin_version' => CPULSE_VERSION,
                 'message' => 'Connection successful.',
             ];
         } catch (AuthenticationException $e) {
             return [
                 'compatible' => false,
-                'plugin_version' => CONTENTPULSE_WP_VERSION,
+                'plugin_version' => CPULSE_VERSION,
                 'message' => 'Authentication failed - check your API key.',
             ];
         } catch (Throwable $e) {
             return [
                 'compatible' => false,
-                'plugin_version' => CONTENTPULSE_WP_VERSION,
+                'plugin_version' => CPULSE_VERSION,
                 'message' => 'Connection failed: '.$e->getMessage(),
             ];
         }

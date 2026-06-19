@@ -67,7 +67,7 @@ class Routes
      */
     public function checkApiKeyPermission(WP_REST_Request $request): bool
     {
-        $storedKey = get_option('contentpulse_api_key', '');
+        $storedKey = get_option('cpulse_api_key', '');
         if (empty($storedKey)) {
             return false;
         }
@@ -88,7 +88,7 @@ class Routes
         global $wp_version;
 
         return new WP_REST_Response([
-            'plugin_version' => CONTENTPULSE_WP_VERSION,
+            'plugin_version' => CPULSE_VERSION,
             'wordpress_version' => $wp_version,
             'php_version' => PHP_VERSION,
             'supports_blocks' => version_compare($wp_version, '5.0', '>='),

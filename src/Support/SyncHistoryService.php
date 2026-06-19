@@ -6,7 +6,7 @@ namespace ContentPulse\WordPress\Support;
 
 final class SyncHistoryService
 {
-    private const OPTION_KEY = 'contentpulse_recent_syncs';
+    private const OPTION_KEY = 'cpulse_recent_syncs';
 
     private const MAX_ITEMS = 10;
 

@@ -229,9 +229,9 @@ class PostUpsertService
      */
     private function updateSyncTracking(string $action, int $postId, array $payload): void
     {
-        update_option('contentpulse_last_sync', current_time('mysql'));
-        $count = (int) get_option('contentpulse_sync_count', 0);
-        update_option('contentpulse_sync_count', $count + 1);
+        update_option('cpulse_last_sync', current_time('mysql'));
+        $count = (int) get_option('cpulse_sync_count', 0);
+        update_option('cpulse_sync_count', $count + 1);
 
         $history = new SyncHistoryService;
         $history->record([

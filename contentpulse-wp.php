@@ -20,10 +20,12 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-define('CONTENTPULSE_WP_VERSION', '1.0.0');
-define('CONTENTPULSE_WP_FILE', __FILE__);
-define('CONTENTPULSE_WP_DIR', plugin_dir_path(__FILE__));
-define('CONTENTPULSE_WP_URL', plugin_dir_url(__FILE__));
+// Plugin-internal globals use the distinct "cpulse"/"CPULSE" prefix (not the
+// common word "content") to avoid collisions with other plugins and core.
+define('CPULSE_VERSION', '1.0.0');
+define('CPULSE_FILE', __FILE__);
+define('CPULSE_DIR', plugin_dir_path(__FILE__));
+define('CPULSE_URL', plugin_dir_url(__FILE__));
 
 if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require_once __DIR__.'/vendor/autoload.php';

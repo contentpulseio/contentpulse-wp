@@ -14,8 +14,8 @@ class IngestionController
      */
     public function status(): WP_REST_Response
     {
-        $lastSync = get_option('contentpulse_last_sync', null);
-        $syncCount = (int) get_option('contentpulse_sync_count', 0);
+        $lastSync = get_option('cpulse_last_sync', null);
+        $syncCount = (int) get_option('cpulse_sync_count', 0);
         $history = (new SyncHistoryService)->latest(5);
 
         return new WP_REST_Response([
@@ -23,7 +23,7 @@ class IngestionController
             'last_sync_at' => $lastSync,
             'total_synced' => $syncCount,
             'recent_syncs' => $history,
-            'plugin_version' => CONTENTPULSE_WP_VERSION,
+            'plugin_version' => CPULSE_VERSION,
         ], 200);
     }
 }

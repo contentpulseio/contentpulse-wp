@@ -30,7 +30,7 @@ final class Plugin
 
     public static function activate(): void
     {
-        update_option('contentpulse_wp_version', CONTENTPULSE_WP_VERSION);
+        update_option('cpulse_version', CPULSE_VERSION);
         flush_rewrite_rules();
     }
 
@@ -46,9 +46,9 @@ final class Plugin
         add_action('admin_init', [$this, 'registerSettings']);
         add_action('wp_head', [$this, 'renderContentPulseMetaTags'], 5);
         add_action('wp_enqueue_scripts', [$this, 'enqueueFeaturedImageStyleFix']);
-        add_action('admin_post_contentpulse_test_connection', [$this, 'handleTestConnection']);
-        add_action('admin_post_contentpulse_test_api_key', [$this, 'handleTestApiKey']);
-        add_action('admin_post_contentpulse_publish_ready', [$this, 'handlePublishReadyContent']);
+        add_action('admin_post_cpulse_test_connection', [$this, 'handleTestConnection']);
+        add_action('admin_post_cpulse_test_api_key', [$this, 'handleTestApiKey']);
+        add_action('admin_post_cpulse_publish_ready', [$this, 'handlePublishReadyContent']);
 
         (new UpdateChecker)->register();
     }
@@ -135,8 +135,8 @@ final class Plugin
             return;
         }
 
-        $handle = 'contentpulse-featured-image-fix';
-        wp_register_style($handle, false, [], CONTENTPULSE_WP_VERSION);
+        $handle = 'cpulse-featured-image-fix';
+        wp_register_style($handle, false, [], CPULSE_VERSION);
         wp_enqueue_style($handle);
 
         $css = 'figure.wp-block-post-featured-image{aspect-ratio:auto !important;}'
@@ -152,7 +152,7 @@ final class Plugin
             __('ContentPulse Settings', 'contentpulse-ai-seo-content'),
             __('ContentPulse', 'contentpulse-ai-seo-content'),
             'manage_options',
-            'contentpulse-settings',
+            'cpulse-settings',
             [$this, 'renderSettingsPage'],
         );
     }
@@ -163,7 +163,7 @@ final class Plugin
             return;
         }
 
-        $settingsApiKey = (string) get_option('contentpulse_api_key', '');
+        $settingsApiKey = (string) get_option('cpulse_api_key', '');
         $recentSyncs = (new SyncHistoryService)->latest(10);
         $readyContents = [];
         $readyContentsError = '';
@@ -173,9 +173,9 @@ final class Plugin
         }
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display, sanitized and escaped on output.
-        $noticeMessage = isset($_GET['contentpulse_notice']) ? sanitize_text_field(wp_unslash($_GET['contentpulse_notice'])) : '';
+        $noticeMessage = isset($_GET['cpulse_notice']) ? sanitize_text_field(wp_unslash($_GET['cpulse_notice'])) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only notice display, sanitized and escaped on output.
-        $noticeType = isset($_GET['contentpulse_notice_type']) ? sanitize_key(wp_unslash($_GET['contentpulse_notice_type'])) : '';
+        $noticeType = isset($_GET['cpulse_notice_type']) ? sanitize_key(wp_unslash($_GET['cpulse_notice_type'])) : '';
         $noticeClass = $noticeType === 'success' ? 'notice notice-success' : 'notice notice-error';
 
         ?>
@@ -190,18 +190,18 @@ final class Plugin
 
             <h2><?php echo esc_html__('1) Configure settings API key', 'contentpulse-ai-seo-content'); ?></h2>
             <form method="post" action="options.php">
-                <?php settings_fields('contentpulse_settings'); ?>
+                <?php settings_fields('cpulse_settings'); ?>
                 <table class="form-table" role="presentation">
                     <tbody>
                     <tr>
                         <th scope="row">
-                            <label for="contentpulse_api_key"><?php echo esc_html__('Settings API Key', 'contentpulse-ai-seo-content'); ?></label>
+                            <label for="cpulse_api_key"><?php echo esc_html__('Settings API Key', 'contentpulse-ai-seo-content'); ?></label>
                         </th>
                         <td>
                             <input
-                                id="contentpulse_api_key"
+                                id="cpulse_api_key"
                                 type="password"
-                                name="contentpulse_api_key"
+                                name="cpulse_api_key"
                                 value="<?php echo esc_attr($settingsApiKey); ?>"
                                 class="regular-text"
                                 autocomplete="off"
@@ -219,13 +219,13 @@ final class Plugin
             <h2><?php echo esc_html__('2) Run quick checks', 'contentpulse-ai-seo-content'); ?></h2>
             <div style="display:flex; gap:10px; align-items:center;">
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <input type="hidden" name="action" value="contentpulse_test_connection">
-                    <?php wp_nonce_field('contentpulse_test_connection'); ?>
+                    <input type="hidden" name="action" value="cpulse_test_connection">
+                    <?php wp_nonce_field('cpulse_test_connection'); ?>
                     <?php submit_button(__('Test Connection', 'contentpulse-ai-seo-content'), 'secondary', 'submit', false); ?>
                 </form>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <input type="hidden" name="action" value="contentpulse_test_api_key">
-                    <?php wp_nonce_field('contentpulse_test_api_key'); ?>
+                    <input type="hidden" name="action" value="cpulse_test_api_key">
+                    <?php wp_nonce_field('cpulse_test_api_key'); ?>
                     <?php submit_button(__('Test API Key (ContentPulse)', 'contentpulse-ai-seo-content'), 'secondary', 'submit', false); ?>
                 </form>
             </div>
@@ -283,9 +283,9 @@ final class Plugin
                             <td>
                                 <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
                                     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                                        <input type="hidden" name="action" value="contentpulse_publish_ready">
-                                        <input type="hidden" name="contentpulse_content_id" value="<?php echo esc_attr((string) ($readyContent['id'] ?? '')); ?>">
-                                        <?php wp_nonce_field('contentpulse_publish_ready'); ?>
+                                        <input type="hidden" name="action" value="cpulse_publish_ready">
+                                        <input type="hidden" name="cpulse_content_id" value="<?php echo esc_attr((string) ($readyContent['id'] ?? '')); ?>">
+                                        <?php wp_nonce_field('cpulse_publish_ready'); ?>
                                         <button type="submit" class="button button-secondary">
                                             <?php echo $existingPostId
                                         ? esc_html__('Re-publish', 'contentpulse-ai-seo-content')
@@ -367,7 +367,7 @@ final class Plugin
 
     public function registerSettings(): void
     {
-        register_setting('contentpulse_settings', 'contentpulse_api_key', [
+        register_setting('cpulse_settings', 'cpulse_api_key', [
             'type' => 'string',
             'sanitize_callback' => 'sanitize_text_field',
             'default' => '',
@@ -379,9 +379,9 @@ final class Plugin
         if (! current_user_can('manage_options')) {
             wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
         }
-        check_admin_referer('contentpulse_test_connection');
+        check_admin_referer('cpulse_test_connection');
 
-        $key = (string) get_option('contentpulse_api_key', '');
+        $key = (string) get_option('cpulse_api_key', '');
         if ($key === '') {
             $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
         }
@@ -397,7 +397,7 @@ final class Plugin
             $this->redirectWithNotice('error', $message);
         }
 
-        $pluginVersion = is_array($body) ? (string) ($body['plugin_version'] ?? CONTENTPULSE_WP_VERSION) : CONTENTPULSE_WP_VERSION;
+        $pluginVersion = is_array($body) ? (string) ($body['plugin_version'] ?? CPULSE_VERSION) : CPULSE_VERSION;
         $this->redirectWithNotice('success', sprintf(
             /* translators: %s: plugin version */
             __('Connection successful. Plugin version: %s', 'contentpulse-ai-seo-content'),
@@ -410,9 +410,9 @@ final class Plugin
         if (! current_user_can('manage_options')) {
             wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
         }
-        check_admin_referer('contentpulse_test_api_key');
+        check_admin_referer('cpulse_test_api_key');
 
-        $apiKey = trim((string) get_option('contentpulse_api_key', ''));
+        $apiKey = trim((string) get_option('cpulse_api_key', ''));
         if ($apiKey === '') {
             $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
         }
@@ -442,17 +442,17 @@ final class Plugin
         if (! current_user_can('manage_options')) {
             wp_die(esc_html__('Unauthorized request.', 'contentpulse-ai-seo-content'));
         }
-        check_admin_referer('contentpulse_publish_ready');
+        check_admin_referer('cpulse_publish_ready');
 
-        $contentId = isset($_POST['contentpulse_content_id'])
-            ? sanitize_text_field((string) wp_unslash($_POST['contentpulse_content_id']))
+        $contentId = isset($_POST['cpulse_content_id'])
+            ? sanitize_text_field((string) wp_unslash($_POST['cpulse_content_id']))
             : '';
         if ($contentId === '') {
             $this->redirectWithNotice('error', __('Please provide a valid ContentPulse content ID.', 'contentpulse-ai-seo-content'));
         }
 
         $sourceApiUrl = $this->resolveContentPulseApiBaseUrl();
-        $sourceApiKey = trim((string) get_option('contentpulse_api_key', ''));
+        $sourceApiKey = trim((string) get_option('cpulse_api_key', ''));
         if ($sourceApiKey === '') {
             $this->redirectWithNotice('error', __('Please save your settings API key first.', 'contentpulse-ai-seo-content'));
         }
@@ -585,9 +585,9 @@ final class Plugin
     private function redirectWithNotice(string $type, string $message): never
     {
         $redirectUrl = add_query_arg([
-            'page' => 'contentpulse-settings',
-            'contentpulse_notice_type' => $type === 'success' ? 'success' : 'error',
-            'contentpulse_notice' => $message,
+            'page' => 'cpulse-settings',
+            'cpulse_notice_type' => $type === 'success' ? 'success' : 'error',
+            'cpulse_notice' => $message,
         ], admin_url('options-general.php'));
 
         wp_safe_redirect($redirectUrl);
