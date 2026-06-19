@@ -14,7 +14,6 @@ use ContentPulse\WordPress\Plugin;
  * Text Domain: contentpulse-ai-seo-autoblogger
  * Requires at least: 5.9
  * Requires PHP: 8.2
- * Update URI: https://github.com/contentpulseio/contentpulse-wp
  */
 if (! defined('ABSPATH')) {
     exit;

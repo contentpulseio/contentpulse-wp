@@ -11,7 +11,6 @@ use ContentPulse\WordPress\Api\Routes;
 use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
 use ContentPulse\WordPress\Support\PostUpsertService;
 use ContentPulse\WordPress\Support\SyncHistoryService;
-use ContentPulse\WordPress\Support\UpdateChecker;
 
 final class Plugin
 {
@@ -49,8 +48,6 @@ final class Plugin
         add_action('admin_post_cpulse_test_connection', [$this, 'handleTestConnection']);
         add_action('admin_post_cpulse_test_api_key', [$this, 'handleTestApiKey']);
         add_action('admin_post_cpulse_publish_ready', [$this, 'handlePublishReadyContent']);
-
-        (new UpdateChecker)->register();
     }
 
     public function renderContentPulseMetaTags(): void
