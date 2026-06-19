@@ -69,14 +69,14 @@ final class Plugin
             return;
         }
 
-        $metaTitle = trim((string) get_post_meta($postId, '_contentpulse_meta_title', true));
-        $metaDescription = trim((string) get_post_meta($postId, '_contentpulse_meta_description', true));
-        $metaKeywords = trim((string) get_post_meta($postId, '_contentpulse_meta_keywords', true));
-        $metaRobots = trim((string) get_post_meta($postId, '_contentpulse_meta_robots', true));
-        $ogTitle = trim((string) get_post_meta($postId, '_contentpulse_og_title', true));
-        $ogDescription = trim((string) get_post_meta($postId, '_contentpulse_og_description', true));
-        $twitterTitle = trim((string) get_post_meta($postId, '_contentpulse_twitter_title', true));
-        $twitterDescription = trim((string) get_post_meta($postId, '_contentpulse_twitter_description', true));
+        $metaTitle = trim((string) get_post_meta($postId, '_cpulse_meta_title', true));
+        $metaDescription = trim((string) get_post_meta($postId, '_cpulse_meta_description', true));
+        $metaKeywords = trim((string) get_post_meta($postId, '_cpulse_meta_keywords', true));
+        $metaRobots = trim((string) get_post_meta($postId, '_cpulse_meta_robots', true));
+        $ogTitle = trim((string) get_post_meta($postId, '_cpulse_og_title', true));
+        $ogDescription = trim((string) get_post_meta($postId, '_cpulse_og_description', true));
+        $twitterTitle = trim((string) get_post_meta($postId, '_cpulse_twitter_title', true));
+        $twitterDescription = trim((string) get_post_meta($postId, '_cpulse_twitter_description', true));
 
         if (
             $metaTitle === '' &&
@@ -504,7 +504,7 @@ final class Plugin
     private function resolveContentPulseApiBaseUrl(): string
     {
         $resolved = ContentPulseEndpointResolver::resolveApiBaseUrlFromEnvironment();
-        $filtered = (string) apply_filters('contentpulse_api_base_url', $resolved);
+        $filtered = (string) apply_filters('cpulse_api_base_url', $resolved);
 
         return ContentPulseEndpointResolver::resolveApiBaseUrl($filtered);
     }
@@ -557,7 +557,7 @@ final class Plugin
         }
 
         $resolved = ContentPulseEndpointResolver::resolveAppBaseUrlFromEnvironment();
-        $filtered = (string) apply_filters('contentpulse_app_base_url', $resolved);
+        $filtered = (string) apply_filters('cpulse_app_base_url', $resolved);
 
         return ContentPulseEndpointResolver::buildContentUrl($filtered, $contentId);
     }

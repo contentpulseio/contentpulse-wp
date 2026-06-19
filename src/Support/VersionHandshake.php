@@ -82,7 +82,7 @@ class VersionHandshake
             $configured = 'http://host.docker.internal:8080';
         }
 
-        $filtered = apply_filters('contentpulse_api_base_url', $configured);
+        $filtered = apply_filters('cpulse_api_base_url', $configured);
         $normalized = rtrim(trim((string) $filtered), '/');
 
         if (str_ends_with($normalized, '/api/v1')) {

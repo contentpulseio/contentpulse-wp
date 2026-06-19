@@ -10,7 +10,7 @@ use WP_User;
 /**
  * Creates or updates WordPress posts from ContentPulse payloads.
  *
- * Uses `_contentpulse_id` post meta to track the mapping between
+ * Uses `_cpulse_id` post meta to track the mapping between
  * ContentPulse content IDs and WordPress post IDs.
  */
 class PostUpsertService
@@ -60,7 +60,7 @@ class PostUpsertService
         $postId = (int) $result;
 
         if ($contentPulseId) {
-            update_post_meta($postId, '_contentpulse_id', (string) $contentPulseId);
+            update_post_meta($postId, '_cpulse_id', (string) $contentPulseId);
         }
 
         if ($featuredImageId) {
@@ -97,7 +97,7 @@ class PostUpsertService
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared meta lookup by value; runs once per sync to map remote IDs to posts.
         $postId = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_id' AND meta_value = %s LIMIT 1",
+                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_cpulse_id' AND meta_value = %s LIMIT 1",
                 $needle,
             ),
         );
@@ -128,14 +128,14 @@ class PostUpsertService
         }
 
         $metaMap = [
-            'meta_title' => '_contentpulse_meta_title',
-            'meta_description' => '_contentpulse_meta_description',
-            'meta_keywords' => '_contentpulse_meta_keywords',
-            'og_title' => '_contentpulse_og_title',
-            'og_description' => '_contentpulse_og_description',
-            'twitter_title' => '_contentpulse_twitter_title',
-            'twitter_description' => '_contentpulse_twitter_description',
-            'meta_robots' => '_contentpulse_meta_robots',
+            'meta_title' => '_cpulse_meta_title',
+            'meta_description' => '_cpulse_meta_description',
+            'meta_keywords' => '_cpulse_meta_keywords',
+            'og_title' => '_cpulse_og_title',
+            'og_description' => '_cpulse_og_description',
+            'twitter_title' => '_cpulse_twitter_title',
+            'twitter_description' => '_cpulse_twitter_description',
+            'meta_robots' => '_cpulse_meta_robots',
         ];
 
         foreach ($metaMap as $seoKey => $metaKey) {

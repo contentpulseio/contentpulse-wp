@@ -79,7 +79,7 @@ class PostsController
             'content' => $post->post_content,
             'excerpt' => $post->post_excerpt,
             'featured_image' => get_the_post_thumbnail_url($post->ID, 'full') ?: null,
-            'contentpulse_id' => get_post_meta($post->ID, '_contentpulse_id', true) ?: null,
+            'contentpulse_id' => get_post_meta($post->ID, '_cpulse_id', true) ?: null,
             'published_at' => $post->post_date,
             'modified_at' => $post->post_modified,
         ], 200);

@@ -41,7 +41,7 @@ class MediaSideloadService
             }
         }
 
-        update_post_meta($attachmentId, '_contentpulse_source_url', $url);
+        update_post_meta($attachmentId, '_cpulse_source_url', $url);
 
         return (int) $attachmentId;
     }
@@ -56,7 +56,7 @@ class MediaSideloadService
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Prepared meta lookup by value; runs once per sideload to deduplicate attachments.
         $attachmentId = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_contentpulse_source_url' AND meta_value = %s LIMIT 1",
+                "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_cpulse_source_url' AND meta_value = %s LIMIT 1",
                 $url,
             ),
         );
