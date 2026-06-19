@@ -67,28 +67,9 @@ class VersionHandshake
 
     private function resolveContentPulseApiBaseUrl(): string
     {
-        $configured = '';
+        $resolved = ContentPulseEndpointResolver::resolveApiBaseUrlFromEnvironment();
+        $filtered = (string) apply_filters('cpulse_api_base_url', $resolved);
 
-        if (defined('CONTENTPULSE_API_URL')) {
-            $constantUrl = constant('CONTENTPULSE_API_URL');
-            if (is_string($constantUrl)) {
-                $configured = $constantUrl;
-            }
-        } elseif (is_string(getenv('CONTENTPULSE_API_URL'))) {
-            $configured = (string) getenv('CONTENTPULSE_API_URL');
-        }
-
-        if (trim($configured) === '') {
-            $configured = 'http://host.docker.internal:8080';
-        }
-
-        $filtered = apply_filters('cpulse_api_base_url', $configured);
-        $normalized = rtrim(trim((string) $filtered), '/');
-
-        if (str_ends_with($normalized, '/api/v1')) {
-            return mb_substr($normalized, 0, -7);
-        }
-
-        return $normalized;
+        return ContentPulseEndpointResolver::resolveApiBaseUrl($filtered);
     }
 }
