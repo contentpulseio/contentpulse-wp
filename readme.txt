@@ -4,7 +4,7 @@ Tags: autoblogger, ai content, content publisher, auto publish, seo content
 Requires at least: 5.9
 Tested up to: 7.0
 Requires PHP: 8.2
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,10 @@ This plugin connects to the ContentPulse API (https://www.contentpulse.io) to re
 * Privacy policy: https://www.contentpulse.io/privacy
 
 == Changelog ==
+
+= 1.0.1 =
+* Removed the bundled self-update mechanism for WordPress.org hosting compliance
+* Added composer.json for bundled dependencies
 
 = 1.0.0 =
 * Initial release
