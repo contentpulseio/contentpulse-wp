@@ -7,8 +7,8 @@ namespace ContentPulseIO\WordPress;
 use ContentPulse\Core\DTO\ContentFilters;
 use ContentPulse\Core\DTO\ContentItem;
 use ContentPulse\Http\ContentPulseClient;
+use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
 use ContentPulseIO\WordPress\Api\Routes;
-use ContentPulseIO\WordPress\Support\ContentPulseEndpointResolver;
 use ContentPulseIO\WordPress\Support\PostUpsertService;
 use ContentPulseIO\WordPress\Support\SyncHistoryService;
 

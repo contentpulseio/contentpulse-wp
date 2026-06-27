@@ -6,6 +6,7 @@ namespace ContentPulseIO\WordPress\Support;
 
 use ContentPulse\Core\Exceptions\AuthenticationException;
 use ContentPulse\Http\ContentPulseClient;
+use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
 use Throwable;
 
 /**
