@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Tests\Unit;
+namespace ContentPulseIO\WordPress\Tests\Unit;
 
-use ContentPulse\WordPress\Support\VersionHandshake;
+use ContentPulseIO\WordPress\Support\VersionHandshake;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

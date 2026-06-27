@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Api;
+namespace ContentPulseIO\WordPress\Api;
 
-use ContentPulse\WordPress\Api\Controllers\IngestionController;
-use ContentPulse\WordPress\Api\Controllers\PostsController;
+use ContentPulseIO\WordPress\Api\Controllers\IngestionController;
+use ContentPulseIO\WordPress\Api\Controllers\PostsController;
 use WP_REST_Request;
 use WP_REST_Response;
 

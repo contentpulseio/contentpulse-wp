@@ -22,12 +22,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ContentPulse\\WordPress\\": "src/"
+            "ContentPulseIO\\WordPress\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ContentPulse\\WordPress\\Tests\\": "tests/"
+            "ContentPulseIO\\WordPress\\Tests\\": "tests/"
         }
     },
     "repositories": [

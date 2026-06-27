@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Api\Controllers;
+namespace ContentPulseIO\WordPress\Api\Controllers;
 
-use ContentPulse\WordPress\Support\MediaSideloadService;
-use ContentPulse\WordPress\Support\PostUpsertService;
+use ContentPulseIO\WordPress\Support\MediaSideloadService;
+use ContentPulseIO\WordPress\Support\PostUpsertService;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

@@ -1,12 +1,12 @@
 <?php
 
-use ContentPulse\WordPress\Plugin;
+use ContentPulseIO\WordPress\Plugin;
 
 /**
  * Plugin Name: ContentPulse - AI SEO Autoblogger
  * Plugin URI: https://contentpulse.io/wordpress
  * Description: AI SEO autoblogger that auto-publishes AI-generated, SEO-optimized content from ContentPulse to your WordPress site.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: ContentPulse
  * Author URI: https://contentpulse.io
  * License: GPL-2.0-or-later
@@ -21,7 +21,7 @@ if (! defined('ABSPATH')) {
 
 // Plugin-internal globals use the distinct "cpulse"/"CPULSE" prefix (not the
 // common word "content") to avoid collisions with other plugins and core.
-define('CPULSE_VERSION', '1.0.1');
+define('CPULSE_VERSION', '1.0.2');
 define('CPULSE_FILE', __FILE__);
 define('CPULSE_DIR', plugin_dir_path(__FILE__));
 define('CPULSE_URL', plugin_dir_url(__FILE__));

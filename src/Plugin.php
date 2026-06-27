@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress;
+namespace ContentPulseIO\WordPress;
 
 use ContentPulse\Core\DTO\ContentFilters;
 use ContentPulse\Core\DTO\ContentItem;
 use ContentPulse\Http\ContentPulseClient;
-use ContentPulse\WordPress\Api\Routes;
-use ContentPulse\WordPress\Support\ContentPulseEndpointResolver;
-use ContentPulse\WordPress\Support\PostUpsertService;
-use ContentPulse\WordPress\Support\SyncHistoryService;
+use ContentPulseIO\WordPress\Api\Routes;
+use ContentPulseIO\WordPress\Support\ContentPulseEndpointResolver;
+use ContentPulseIO\WordPress\Support\PostUpsertService;
+use ContentPulseIO\WordPress\Support\SyncHistoryService;
 
 final class Plugin
 {

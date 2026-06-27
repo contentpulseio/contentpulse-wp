@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Api\Controllers;
+namespace ContentPulseIO\WordPress\Api\Controllers;
 
-use ContentPulse\WordPress\Support\SyncHistoryService;
+use ContentPulseIO\WordPress\Support\SyncHistoryService;
 use WP_REST_Response;
 
 class IngestionController

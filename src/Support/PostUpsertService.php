@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Support;
+namespace ContentPulseIO\WordPress\Support;
 
 use WP_Error;
 use WP_User;

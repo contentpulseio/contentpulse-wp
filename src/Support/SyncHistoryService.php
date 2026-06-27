@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Support;
+namespace ContentPulseIO\WordPress\Support;
 
 final class SyncHistoryService
 {

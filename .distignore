@@ -1,0 +1,34 @@
+# Files and directories that must NOT ship in the WordPress.org distribution
+# archive built with `wp dist-archive`. Patterns follow .gitignore semantics, so a
+# bare name matches at any depth (e.g. .phpunit.cache inside vendor/ is excluded).
+
+# Dev test artifacts
+.phpunit.cache
+.phpunit.result.cache
+phpunit.xml
+phpunit.xml.dist
+tests
+coverage
+
+# Tooling and config not needed at runtime
+.github
+.git
+.gitignore
+.gitattributes
+.distignore
+pint.json
+composer.lock
+node_modules
+
+# WordPress.org assets (banners/screenshots live in SVN /assets, not the plugin)
+.wordpress-org
+
+# Editor / OS cruft
+.idea
+.vscode
+*.log
+*.swp
+.DS_Store
+
+# Source control / docs not required for the runnable plugin
+README.md

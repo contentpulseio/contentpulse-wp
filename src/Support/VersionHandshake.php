@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ContentPulse\WordPress\Support;
+namespace ContentPulseIO\WordPress\Support;
 
 use ContentPulse\Core\Exceptions\AuthenticationException;
 use ContentPulse\Http\ContentPulseClient;
